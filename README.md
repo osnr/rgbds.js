@@ -8,7 +8,9 @@ type-annotated wrapper.
 
 ```.javascript
 var rgbds = require('rgbds.js');
-rgbds.
+var obj = rgbds.asm('... assembly source ...');
+var rom = rgbds.link([obj]);
+rom = rgbds.fix(rom);
 ```
 
 Also see the [test case](test/index.spec.ts), which assembles and
