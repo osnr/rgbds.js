@@ -71,10 +71,7 @@ export function asm(source: string, opts: AsmOptions = {}): Uint8Array {
 
   const args = [
     'rgbasm',
-    '-o', 'out.o'
-    // '-b', bChars,
-    // '-g', gChars
-    // TODO padValue
+    '-o', 'out.o',
   ];
   if (noNopAfterHalt) args.push('-h');
   for (name in defines) {
@@ -113,6 +110,7 @@ export function link(objs: Uint8Array[], opts: LinkOptions = {}): Uint8Array {
 
   const args = [
     'rgblink',
+    '-p', padValue.toString(),
     '-o', 'out.gb'
   ];
   objs.forEach((obj, idx) => {

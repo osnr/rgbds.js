@@ -3,10 +3,19 @@ import { readFileSync, writeFileSync } from 'fs';
 import * as assert from 'assert';
 
 describe('sprite.asm', function() {
-  it('builds equal ROM', function() {
-    const spriteObj = asm(readFileSync('test/sprite.asm', 'utf8'));
+  function build(asmPath: string): Buffer {
+    const spriteObj = asm(readFileSync(asmPath, 'utf8'));
     let spriteGb = link([spriteObj]);
     spriteGb = fix(spriteGb);
-    assert.deepEqual(new Buffer(spriteGb), readFileSync('test/sprite.expect.gb'));
+    return new Buffer(spriteGb);
+  }
+
+  it('builds equal ROM', function() {
+    assert.deepEqual(build('test/sprite.asm'), readFileSync('test/sprite.expect.gb'));
   });
+
+  // FIXME: Make module reusable.
+  // it('builds equal ROM again', function() {
+  //   assert.deepEqual(build('test/sprite.asm'), readFileSync('test/sprite.expect.gb'));
+  // });
 });
