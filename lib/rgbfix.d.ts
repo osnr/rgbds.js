@@ -1,2 +1,2 @@
-declare function Rgbasm(Module: any): any;
-export = Rgbasm;
+declare function Rgbfix(Module: any): any;
+export = Rgbfix;
