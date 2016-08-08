@@ -1,0 +1,4 @@
+.DS_Store
+typings
+build
+node_modules
