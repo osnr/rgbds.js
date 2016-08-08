@@ -63,11 +63,7 @@ export function asm(source: string, opts: AsmOptions = {}): Uint8Array {
     verbose = false
   } = opts;
 
-  if (!Rgbasm) {
-    Rgbasm = RgbasmFactory({
-      noInitialRun: true
-    });
-  }
+  const Rgbasm = RgbasmFactory({ noInitialRun: true });
 
   const args = [
     'rgbasm',
@@ -83,7 +79,7 @@ export function asm(source: string, opts: AsmOptions = {}): Uint8Array {
   if (verbose) args.push('-v');
   args.push('in.asm');
 
-  Rgbasm.FS.writeFile('in.asm', source);
+  Rgbasm.FS.writeFile('in.asm', source, { encoding: 'utf8', flags: 'w' });
   callMain(Rgbasm, args);
 
   return Rgbasm.FS.readFile('out.o', { encoding: 'binary' });
@@ -96,27 +92,21 @@ export type LinkOptions = {
   padValue?: number;
 };
 
-let Rgblink: any;
 export function link(objs: Uint8Array[], opts: LinkOptions = {}): Uint8Array {
   const {
     padValue = 0x00
   } = opts;
 
-  if (!Rgblink) {
-    Rgblink = RgblinkFactory({
-      noInitialRun: true
-    });
-  }
+  const Rgblink = RgblinkFactory({ noInitialRun: true });
 
   const args = [
     'rgblink',
-    '-p', padValue.toString(),
     '-o', 'out.gb'
   ];
   objs.forEach((obj, idx) => {
     const objPath = idx + '.o';
     args.push(objPath);
-    Rgblink.FS.writeFile(objPath, obj, { encoding: 'binary' });
+    Rgblink.FS.writeFile(objPath, obj, { flags: 'w', encoding: 'binary' });
   });
 
   callMain(Rgblink, args);
@@ -126,13 +116,9 @@ export function link(objs: Uint8Array[], opts: LinkOptions = {}): Uint8Array {
 
 let Rgbfix: any;
 export function fix(gb: Uint8Array): Uint8Array {
-  if (!Rgbfix) {
-    Rgbfix = RgbfixFactory({
-      noInitialRun: true
-    });
-  }
+  const Rgbfix = RgbfixFactory({ noInitialRun: true });
 
-  Rgbfix.FS.writeFile('rom.gb', gb, { encoding: 'binary' });
+  Rgbfix.FS.writeFile('rom.gb', gb, { flags: 'w', encoding: 'binary' });
   callMain(Rgbfix, ['rgbfix', '-p', '0', '-v', 'rom.gb']);
   return Rgbfix.FS.readFile('rom.gb', { encoding: 'binary' });
 }
